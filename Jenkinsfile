@@ -127,32 +127,6 @@ spec:
         } // End steps
     } // End stage
     
-    // ***** Stage OWASP *****
-    stage('OWASP Dependency Check') {
-        steps {
-            container('java-node') {
-                script {
-                    // Install application dependency
-                    sh '''cd src/ && npm install --package-lock && cd ../'''
-
-                    // Start OWASP Dependency Check
-                    dependencyCheck(
-                        additionalArguments: "--data /home/jenkins/dependency-check-data --out dependency-check-report.xml",
-                        odcInstallation: "dependency-check"
-                    )
-
-                    // Publish report to Jenkins
-                    dependencyCheckPublisher(
-                        pattern: 'dependency-check-report.xml'
-                    )
-
-                    // Remove applocation dependency
-                    sh'''rm -rf src/node_modules src/package-lock.json'''
-                } // End script
-            } // End container
-        } // End steps
-    } // End stage
-
    
     // ***** Stage Build *****
     stage('Build details Docker Image and push') {
